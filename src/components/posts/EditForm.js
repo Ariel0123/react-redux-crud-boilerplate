@@ -1,50 +1,75 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
-import { getPost } from '../../actions/posts';
+import { getPost, updatePost } from '../../actions/posts';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
+
 
 
 export class EditForm extends Component {
 
     static propTypes = {
-        post: PropTypes.array.isRequired,
+        post: PropTypes.object,
         getPost: PropTypes.func.isRequired
     };
 
+
+
     state = {
 
-        title: this.props[0].post.title,
-        body: this.props[0].post.body
+        title: this.props.post.title,
+        description: this.props.post.description,
+        redir: false
     }
-
-
-    onChange = e => this.setState({
-        [e.target.name]: e.target.value
-    });
-
-    componentWillReceiveProps = (nextProps) => {
-        this.setState({
-            title: nextProps.posts.title,
-            body: nextProps.posts.body
-        })
-
-    };
 
     componentDidMount = () => {
         this.props.getPost(this.props.match.params.id);
-        console.log(this.title, this.body);
     };
+
+    componentWillReceiveProps(nextProps) {
+
+        this.setState({
+            title: nextProps.post.title,
+            description: nextProps.post.description
+
+        });
+
+    }
+
+
+
+    onChange = e => {
+        console.log();
+        this.setState({
+
+
+            [e.target.name]: e.target.value
+        }
+        )
+    };
+
+
 
     onSubmit = e => {
         e.preventDefault();
-        const { title, body } = this.state;
-        const post = { title, body };
-
+        const { title, description } = this.state;
+        const post = { title, description };
+        this.props.updatePost(this.props.match.params.id, post);
+        this.setState({
+            redir: true
+        })
 
 
     }
 
     render() {
+
+        const { title, description, redir } = this.state;
+
+        if (redir === true) {
+            return <Redirect to="/" />
+        }
+
         return (
             <div className="card">
                 <div className="card-header">
@@ -54,17 +79,20 @@ export class EditForm extends Component {
                     <form onSubmit={this.onSubmit}>
                         <div className="form-group">
                             <label>Title</label>
-                            <input type="text" className="form-control" name="title" onChange={this.onChange} value={this.state.title} />
+                            <input type="text" className="form-control" name="title" onChange={this.onChange} value={title} />
                         </div>
                         <div className="form-group">
                             <label>Body</label>
-                            <input type="text" className="form-control" name="body" onChange={this.onChange} value={this.state.body} />
+                            <input type="text" className="form-control" name="description" onChange={this.onChange} value={description} />
                         </div>
                         <button type="submit" className="btn btn-success">Update</button>
 
 
 
                     </form>
+
+
+
                 </div>
 
             </div>
@@ -74,8 +102,8 @@ export class EditForm extends Component {
 
 const mapStateToProps = (state, props) => ({
 
-    post: state.postReducer.posts.find(post => post.id === props.match.params.id)
+    post: state.postReducer.post
 
 })
 
-export default connect(mapStateToProps, { getPost })(EditForm);
+export default connect(mapStateToProps, { getPost, updatePost })(EditForm);

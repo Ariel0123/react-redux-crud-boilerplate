@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { GET_POSTS, DELETE_POST, ADD_POST, GET_POST } from './types';
+import { GET_POSTS, DELETE_POST, ADD_POST, GET_SINGLE_POST, UPDATE_POST } from './types';
 
 //get posts
 export const getPosts = () => dispatch => {
-    axios.get('https://jsonplaceholder.typicode.com/posts?_limit=5')
+    axios.get('http://localhost:4000/')
         .then(res => {
             dispatch({
                 type: GET_POSTS,
@@ -14,7 +14,7 @@ export const getPosts = () => dispatch => {
 
 //add post
 export const addPost = (post) => dispatch => {
-    axios.post('https://jsonplaceholder.typicode.com/posts/', post)
+    axios.post('http://localhost:4000/', post)
         .then(res => {
             dispatch({
                 type: ADD_POST,
@@ -25,10 +25,21 @@ export const addPost = (post) => dispatch => {
 
 //get post
 export const getPost = (id) => dispatch => {
-    axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    axios.get(`http://localhost:4000/${id}`)
         .then(res => {
             dispatch({
-                type: GET_POST,
+                type: GET_SINGLE_POST,
+                payload: res.data
+            });
+        }).catch(err => console.log(err));
+};
+
+//update post
+export const updatePost = (id, newPost) => dispatch => {
+    axios.put(`http://localhost:4000/${id}`, newPost)
+        .then(res => {
+            dispatch({
+                type: UPDATE_POST,
                 payload: res.data
             });
         }).catch(err => console.log(err));
@@ -36,9 +47,10 @@ export const getPost = (id) => dispatch => {
 
 
 
+
 //delete post
 export const deletePost = (id) => dispatch => {
-    axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    axios.delete(`http://localhost:4000/${id}`)
         .then(res => {
             dispatch({
                 type: DELETE_POST,

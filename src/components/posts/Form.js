@@ -4,6 +4,7 @@ import { addPost } from '../../actions/posts';
 import PropTypes from 'prop-types';
 
 
+
 export class Form extends Component {
     static propTypes = {
         addPost: PropTypes.func.isRequired
@@ -11,7 +12,7 @@ export class Form extends Component {
 
     state = {
         title: '',
-        body: ''
+        description: ''
     }
 
     onChange = e => this.setState({
@@ -20,8 +21,8 @@ export class Form extends Component {
 
     onSubmit = e => {
         e.preventDefault();
-        const { title, body } = this.state;
-        const post = { title, body };
+        const { title, description } = this.state;
+        const post = { title, description };
 
         this.props.addPost(post);
     }
@@ -40,7 +41,7 @@ export class Form extends Component {
                         </div>
                         <div className="form-group">
                             <label>Body</label>
-                            <input type="text" className="form-control" name="body" onChange={this.onChange} value={this.state.body} />
+                            <input type="text" className="form-control" name="description" onChange={this.onChange} value={this.state.description} />
                         </div>
                         <button type="submit" className="btn btn-primary">Save</button>
 

@@ -1,8 +1,9 @@
-import { GET_POSTS, DELETE_POST, ADD_POST, GET_POST } from '../actions/types';
+import { GET_POSTS, DELETE_POST, ADD_POST, GET_SINGLE_POST, UPDATE_POST } from '../actions/types';
 
 const initialState = {
 
-    posts: []
+    posts: [],
+    post: {}
 }
 
 export default function (state = initialState, action) {
@@ -12,19 +13,22 @@ export default function (state = initialState, action) {
                 ...state,
                 posts: action.payload
             }
-        case GET_POST:
-            const index = state.posts.findIndex(post => post.id === action.payload);
-            if (index > -1) {
-                return state.posts.map(post => {
-                    if (post.id === action.payload) return action.payload;
-                    return post;
-                });
+        case GET_SINGLE_POST:
+            return {
+                ...state,
+                post: action.payload
             }
 
         case ADD_POST:
             return {
                 ...state,
                 posts: [...state.posts, action.payload]
+            }
+        case UPDATE_POST:
+            return {
+                ...state,
+                posts: [...state.posts, action.payload]
+
             }
         case DELETE_POST:
             return {
